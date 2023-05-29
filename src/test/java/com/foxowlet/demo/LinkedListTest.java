@@ -1,21 +1,41 @@
 package com.foxowlet.demo;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LinkedListTest {
-    List<String> list = new LinkedList<>();
 
-    @Test
-    void get_shouldReturnValue_whenSavedWithAdd() {
+    static Stream<Arguments> getImplementations() {
+        return Stream.of(
+                Arguments.of(new LinkedList<>()),
+                Arguments.of(new DoublyLinkedList<>())
+        );
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    @ParameterizedTest
+    @MethodSource("getImplementations")
+    @interface ListTest {}
+
+    @ListTest
+    void get_shouldReturnValue_whenSavedWithAdd(List<String> list) {
         list.add("test");
 
         assertEquals("test", list.get(0));
     }
 
-    @Test
-    void get_shouldReturnSavedValue_whenMultipleSaved() {
+    @ListTest
+    void get_shouldReturnSavedValue_whenMultipleSaved(List<String> list) {
         list.add("test1");
         list.add("test2");
         list.add("test3");
@@ -25,8 +45,8 @@ class LinkedListTest {
         assertEquals("test3", list.get(2));
     }
 
-    @Test
-    void add_shouldInsertElementByIndex() {
+    @ListTest
+    void add_shouldInsertElementByIndex(List<String> list) {
         list.add("test1");
         list.add("test3");
 
@@ -37,8 +57,8 @@ class LinkedListTest {
         assertEquals("test3", list.get(2));
     }
 
-    @Test
-    void add_shouldUpdateHead_whenIndexIsZero() {
+    @ListTest
+    void add_shouldUpdateHead_whenIndexIsZero(List<String> list) {
         list.add("test2");
 
         list.add(0, "test1");
@@ -47,8 +67,8 @@ class LinkedListTest {
         assertEquals("test2", list.get(1));
     }
 
-    @Test
-    void add_shouldAppendToList_whenIndexedAddIsUsed() {
+    @ListTest
+    void add_shouldAppendToList_whenIndexedAddIsUsed(List<String> list) {
         list.add(0, "test1");
 
         list.add("test2");
@@ -57,8 +77,8 @@ class LinkedListTest {
         assertEquals("test2", list.get(1));
     }
 
-    @Test
-    void add_shouldAppendToList_whenNonZeroIndexedAddIsUsed() {
+    @ListTest
+    void add_shouldAppendToList_whenNonZeroIndexedAddIsUsed(List<String> list) {
         list.add(0, "test1");
         list.add(1, "test2");
 
@@ -69,8 +89,8 @@ class LinkedListTest {
         assertEquals("test3", list.get(2));
     }
 
-    @Test
-    void remove_shouldRemoveElementByIndex() {
+    @ListTest
+    void remove_shouldRemoveElementByIndex(List<String> list) {
         list.add("test1");
         list.add("test2");
         list.add("test3");
@@ -80,8 +100,8 @@ class LinkedListTest {
         assertEquals("test3", list.get(1));
     }
 
-    @Test
-    void remove_shouldUpdateHead_whenZeroIndex() {
+    @ListTest
+    void remove_shouldUpdateHead_whenZeroIndex(List<String> list) {
         list.add("test1");
         list.add("test2");
 
@@ -90,8 +110,8 @@ class LinkedListTest {
         assertEquals("test2", list.get(0));
     }
 
-    @Test
-    void add_shouldAddElement_whenRemoveIsUsed() {
+    @ListTest
+    void add_shouldAddElement_whenRemoveIsUsed(List<String> list) {
         list.add("test1");
         list.remove(0);
 
@@ -100,28 +120,28 @@ class LinkedListTest {
         assertEquals("test2", list.get(0));
     }
 
-    @Test
-    void size_shouldReturnZero_whenListIsEmpty() {
+    @ListTest
+    void size_shouldReturnZero_whenListIsEmpty(List<String> list) {
         assertEquals(0, list.size());
     }
 
-    @Test
-    void size_shouldReturnNumberOfAddedElements() {
+    @ListTest
+    void size_shouldReturnNumberOfAddedElements(List<String> list) {
         list.add("test1");
         list.add("test2");
 
         assertEquals(2, list.size());
     }
 
-    @Test
-    void add_shouldUpdateSize() {
+    @ListTest
+    void add_shouldUpdateSize(List<String> list) {
         list.add(0, "test1");
 
         assertEquals(1, list.size());
     }
 
-    @Test
-    void remove_shouldUpdateSize() {
+    @ListTest
+    void remove_shouldUpdateSize(List<String> list) {
         list.add("test");
         list.add("test2");
         list.remove(0);
@@ -129,8 +149,8 @@ class LinkedListTest {
         assertEquals(1, list.size());
     }
 
-    @Test
-    void add_shouldThrowIllegalArgumentException_whenIndexIsInvalid() {
+    @ListTest
+    void add_shouldThrowIllegalArgumentException_whenIndexIsInvalid(List<String> list) {
         list.add("test");
 
         assertThrows(IllegalArgumentException.class, () -> list.get(2));
