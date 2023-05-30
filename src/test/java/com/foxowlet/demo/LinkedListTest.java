@@ -155,4 +155,28 @@ class LinkedListTest {
 
         assertThrows(IllegalArgumentException.class, () -> list.get(2));
     }
+
+    @ListTest
+    void add_shouldAppendElement_whenLastIsRemoved(List<String> list) {
+        list.add("test1");
+        list.add("test2");
+        list.remove(1);
+
+        list.add("test3");
+
+        assertEquals("test1", list.get(0));
+        assertEquals("test3", list.get(1));
+    }
+
+    @ListTest
+    void add_shouldAppendElement_whenHeadIsRemoved(List<String> list) {
+        list.add("test1");
+        list.add("test2");
+        list.remove(0);
+
+        list.add("test3");
+
+        assertEquals("test2", list.get(0));
+        assertEquals("test3", list.get(1));
+    }
 }

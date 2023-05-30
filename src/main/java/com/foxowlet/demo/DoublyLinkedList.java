@@ -73,7 +73,7 @@ public class DoublyLinkedList<T> implements List<T> {
         } else {
             node.prev.next = node.next;
         }
-        if (index == size - 1) {
+        if (index == size) {
             last = node.prev;
         } else if (index != 0) {
             node.next.prev = node.prev;

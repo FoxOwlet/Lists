@@ -65,7 +65,9 @@ public class LinkedList<T> implements List<T> {
         --size;
         if (index == 0) {
             head = head.next;
-            last = last.next;
+            if (size == 0) {
+                last = null;
+            }
             return;
         }
         Node<T> current = head;
