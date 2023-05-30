@@ -17,7 +17,9 @@ class LinkedListTest {
     static Stream<Arguments> getImplementations() {
         return Stream.of(
                 Arguments.of(new LinkedList<>()),
-                Arguments.of(new DoublyLinkedList<>())
+                Arguments.of(new DoublyLinkedList<>()),
+                Arguments.of(new ArrayList<>()),
+                Arguments.of(new ArrayList<>(1))
         );
     }
 
