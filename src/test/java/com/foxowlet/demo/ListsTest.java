@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LinkedListTest {
+class ListsTest {
 
     static Stream<Arguments> getImplementations() {
         return Stream.of(
