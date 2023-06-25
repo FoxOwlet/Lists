@@ -88,9 +88,7 @@ public class LinkedList<T> extends AbstractList<T> {
         if (node.next == last) {
             last = node;
         }
-        if (node != last) {
-            node.next = node.next.next;
-        }
+        node.next = node.next.next;
         --size;
     }
 
