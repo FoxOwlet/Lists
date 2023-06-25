@@ -129,6 +129,9 @@ public class LinkedList<T> extends AbstractList<T> {
 
         @Override
         public void remove() {
+            if (initialModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
             LinkedList.this.remove(currentIndex - 1);
             initialModCount++;
         }

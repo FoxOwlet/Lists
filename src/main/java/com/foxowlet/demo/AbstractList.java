@@ -31,6 +31,9 @@ public abstract class AbstractList<T> implements List<T> {
 
             @Override
             public void remove() {
+                if (modCount != AbstractList.this.modCount) {
+                    throw new ConcurrentModificationException();
+                }
                 AbstractList.this.remove(--currentIndex);
                 ++modCount;
             }

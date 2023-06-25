@@ -127,6 +127,9 @@ public class DoublyLinkedList<T> extends AbstractList<T> {
 
         @Override
         public void remove() {
+            if (initialModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
             removeNode(lastNode);
         }
     }
