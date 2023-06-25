@@ -1,6 +1,10 @@
 package com.foxowlet.demo;
 
-public class DoublyLinkedList<T> implements List<T> {
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class DoublyLinkedList<T> extends AbstractList<T> {
     private Node<T> head;
     private Node<T> last;
     private int size;
@@ -8,6 +12,7 @@ public class DoublyLinkedList<T> implements List<T> {
     @Override
     public void add(T elem) {
         ++size;
+        ++modCount;
         Node<T> node = new Node<>(elem, null, last);
         if (head == null) {
             head = node;
@@ -22,6 +27,7 @@ public class DoublyLinkedList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new IllegalArgumentException("Invalid index for list of size " + size);
         }
+        ++modCount;
         if (index == size) {
             add(elem);
             return;
@@ -66,23 +72,63 @@ public class DoublyLinkedList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new IllegalArgumentException("Invalid index for list of size " + size);
         }
-        --size;
+        ++modCount;
         Node<T> node = findNode(index);
-        if (index == 0) {
+        removeNode(node);
+    }
+
+    private void removeNode(Node<T> node) {
+        if (node == head) {
             head = node.next;
         } else {
             node.prev.next = node.next;
         }
-        if (index == size) {
+        if (node == last) {
             last = node.prev;
-        } else if (index != 0) {
+        } else if (node != head) {
             node.next.prev = node.prev;
         }
+        --size;
     }
 
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iter();
+    }
+
+    private class Iter implements Iterator<T> {
+        private int initialModCount = modCount;
+        private Node<T> currentNode = head;
+        private Node<T> lastNode;
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            if (initialModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+            T value = currentNode.value;
+            lastNode = currentNode;
+            currentNode = currentNode.next;
+            return value;
+        }
+
+        @Override
+        public void remove() {
+            removeNode(lastNode);
+        }
     }
 
     private static class Node<T> {

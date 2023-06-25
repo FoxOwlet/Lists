@@ -2,7 +2,7 @@ package com.foxowlet.demo;
 
 import java.util.Arrays;
 
-public class ArrayList<T> implements List<T> {
+public class ArrayList<T> extends AbstractList<T> {
     private static final int DEFAULT_INITIAL_SIZE = 16;
     private T[] elems;
     private int size;
@@ -18,6 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T elem) {
+        ++modCount;
         resizeIfNeeded();
         elems[size++] = elem;
     }
@@ -27,6 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new IllegalArgumentException("Invalid index for list of size " + size);
         }
+        ++modCount;
         resizeIfNeeded();
         System.arraycopy(elems, index, elems, index + 1, size - index);
         elems[index] = elem;
@@ -46,6 +48,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new IllegalArgumentException("Invalid index for list of size " + size);
         }
+        ++modCount;
         System.arraycopy(elems, index + 1, elems, index, size - index - 1);
         --size;
     }

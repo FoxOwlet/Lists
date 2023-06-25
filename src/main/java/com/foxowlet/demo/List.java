@@ -1,6 +1,6 @@
 package com.foxowlet.demo;
 
-public interface List<T> {
+public interface List<T> extends Iterable<T> {
     void add(T elem);
     void add(int index, T elem);
 

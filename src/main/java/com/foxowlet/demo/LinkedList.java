@@ -1,12 +1,17 @@
 package com.foxowlet.demo;
 
-public class LinkedList<T> implements List<T> {
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class LinkedList<T> extends AbstractList<T> {
     private Node<T> head;
     private Node<T> last;
     private int size;
 
     @Override
     public void add(T elem) {
+        ++modCount;
         ++size;
         Node<T> node = new Node<>(elem);
         if (last == null) {
@@ -22,6 +27,7 @@ public class LinkedList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new IllegalArgumentException("Invalid index for list of size " + size);
         }
+        ++modCount;
         ++size;
         if (index == 0) {
             addFirst(elem);
@@ -62,9 +68,10 @@ public class LinkedList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new IllegalArgumentException("Invalid index for list of size " + size);
         }
-        --size;
+        ++modCount;
         if (index == 0) {
             head = head.next;
+            --size;
             if (size == 0) {
                 last = null;
             }
@@ -74,16 +81,59 @@ public class LinkedList<T> implements List<T> {
         for (int i = 0; i < index - 1; i++) {
             current = current.next;
         }
-        if (current.next == last) {
-            last = current;
+        removeNode(current);
+    }
+
+    private void removeNode(Node<T> node) {
+        if (node.next == last) {
+            last = node;
         }
-        current.next = current.next.next;
+        if (node != last) {
+            node.next = node.next.next;
+        }
+        --size;
     }
 
 
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iter();
+    }
+
+    private class Iter implements Iterator<T> {
+        private int initialModCount = modCount;
+        private Node<T> currentNode = head;
+        private int currentIndex;
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            if (initialModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+            T value = currentNode.value;
+            ++currentIndex;
+            currentNode = currentNode.next;
+            return value;
+        }
+
+        @Override
+        public void remove() {
+            LinkedList.this.remove(currentIndex - 1);
+            initialModCount++;
+        }
     }
 
     private static class Node<T> {
