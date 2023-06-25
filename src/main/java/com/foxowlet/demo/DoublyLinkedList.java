@@ -32,7 +32,6 @@ public class DoublyLinkedList<T> extends AbstractList<T> {
             add(elem);
             return;
         }
-        ++size;
         Node<T> current = findNode(index);
         Node<T> node = new Node<>(elem, current, current.prev);
         if (index == 0) {
@@ -41,6 +40,7 @@ public class DoublyLinkedList<T> extends AbstractList<T> {
             current.prev.next = node;
         }
         current.prev = node;
+        ++size;
     }
 
     private Node<T> findNode(int index) {

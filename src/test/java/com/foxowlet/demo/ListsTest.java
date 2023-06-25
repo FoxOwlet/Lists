@@ -187,6 +187,31 @@ class ListsTest {
         assertEquals("test3", list.get(1));
     }
 
+    @ListTest
+    void remove_shouldRemoveElementCloseToTheEnd(List<String> list) {
+        for (int i = 0; i < 10; i++) {
+            list.add(String.valueOf(i));
+        }
+
+        list.remove(8);
+
+        assertEquals("7", list.get(7));
+        assertEquals("9", list.get(8));
+    }
+
+    @ListTest
+    void add_shouldInsertElementCloseToTheEnd(List<String> list) {
+        for (int i = 0; i < 10; i++) {
+            list.add(String.valueOf(i));
+        }
+
+        list.add(8, "test");
+
+        assertEquals("7", list.get(7));
+        assertEquals("test", list.get(8));
+        assertEquals("8", list.get(9));
+    }
+
     @Nested
     class IteratorTests {
         @ListTest
