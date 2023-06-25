@@ -81,14 +81,10 @@ public class LinkedList<T> extends AbstractList<T> {
         for (int i = 0; i < index - 1; i++) {
             current = current.next;
         }
-        removeNode(current);
-    }
-
-    private void removeNode(Node<T> node) {
-        if (node.next == last) {
-            last = node;
+        if (current.next == last) {
+            last = current;
         }
-        node.next = node.next.next;
+        current.next = current.next.next;
         --size;
     }
 
